@@ -1,0 +1,1 @@
+For linking GLM, GLFW, ASSIMP GLAD, STB, TINYOBJLOADER VCPKG was used.
