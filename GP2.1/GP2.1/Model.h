@@ -1,19 +1,24 @@
-#ifndef MODEL_H
-#define MODEL_H
-
-#include <string>
-#include <glad/glad.h>
+// Model.h
+#pragma once
 #include <glm/glm.hpp>
 #include "Shader.h"
 
-class Model {
+class Drawable {
 public:
-    Model(const std::string& path);
-    void Draw(Shader& shader);
-private:
-    unsigned int VAO, VBO;
-    unsigned int vertexCount;
-    void loadOBJ(const std::string& path);
+    virtual void Draw(Shader& shader) = 0;
+    virtual ~Drawable() {}
 };
 
-#endif
+class Model {
+public:
+    Model(Drawable* mesh);  // <-- this line must exist
+
+    void Draw(Shader& shader);
+
+    glm::vec3 position;
+    glm::vec3 rotation;
+    glm::vec3 scale;
+
+private:
+    Drawable* mesh;
+};

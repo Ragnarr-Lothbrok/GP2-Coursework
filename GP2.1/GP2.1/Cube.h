@@ -1,15 +1,10 @@
-#ifndef CUBE_H
-#define CUBE_H
+#include "Model.h"
 
-#include <glad/glad.h>
-#include "Shader.h"
-
-class Cube {
+class Cube : public Drawable {
 public:
     Cube();
-    void Draw(Shader& shader);
+    void Draw(Shader& shader) override;
+
 private:
     unsigned int VAO, VBO;
 };
-
-#endif

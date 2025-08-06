@@ -1,16 +1,11 @@
-#ifndef SPHERE_H
-#define SPHERE_H
+#include "Model.h"
 
-#include <glad/glad.h>
-#include <glm/glm.hpp>
-#include "Shader.h"
-
-class Sphere {
+class Sphere : public Drawable {
 public:
-    Sphere(unsigned int segments = 32, unsigned int rings = 16);
-    void Draw(Shader& shader);
+    Sphere(unsigned int segments = 32, unsigned int rings = 32);
+    void Draw(Shader& shader) override;
+
 private:
     unsigned int VAO, VBO, indexCount;
 };
 
-#endif

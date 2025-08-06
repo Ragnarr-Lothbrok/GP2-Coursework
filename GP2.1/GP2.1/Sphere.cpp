@@ -1,3 +1,5 @@
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
 #include "Sphere.h"
 #include <vector>
 #include <cmath>
@@ -14,15 +16,24 @@ Sphere::Sphere(unsigned int segments, unsigned int rings) {
         for (unsigned int x = 0; x <= segments; ++x) {
             float xSegment = (float)x / segments;
             float ySegment = (float)y / rings;
+
             float xPos = std::cos(xSegment * 2.0f * M_PI) * std::sin(ySegment * M_PI);
             float yPos = std::cos(ySegment * M_PI);
             float zPos = std::sin(xSegment * 2.0f * M_PI) * std::sin(ySegment * M_PI);
 
+            // Position
             vertices.push_back(xPos);
             vertices.push_back(yPos);
             vertices.push_back(zPos);
-            vertices.push_back(xSegment);  // u
-            vertices.push_back(ySegment);  // v
+
+            // Normal
+            vertices.push_back(xPos);
+            vertices.push_back(yPos);
+            vertices.push_back(zPos);
+
+            // TexCoords
+            vertices.push_back(xSegment);
+            vertices.push_back(ySegment);
         }
     }
 
@@ -56,17 +67,24 @@ Sphere::Sphere(unsigned int segments, unsigned int rings) {
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
 
     // Position
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
-    // Texture Coordinates
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+    // Normal
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+
+    // TexCoords
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
     glEnableVertexAttribArray(2);
 
     glBindVertexArray(0);
 }
 
 void Sphere::Draw(Shader& shader) {
+    shader.setBool("useLighting", true); // Optional, if your fragment shader uses it
+    shader.setInt("texture1", 0);
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
+    glBindVertexArray(0);
 }
